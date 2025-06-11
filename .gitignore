@@ -1,0 +1,7 @@
+# Python stuff
+__pychache__/
+*.pyc
+
+# Secrets
+firebase_key.json
+.env
