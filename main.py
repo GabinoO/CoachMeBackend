@@ -3,6 +3,7 @@ from fastapi import Form
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
+import uvicorn
 
 import cv2
 import mediapipe as mp
@@ -11,8 +12,6 @@ import numpy as np
 import firebase_admin
 from firebase_admin import credentials, storage, firestore
 from datetime import datetime
-
-import os
 
 # get key content from enviroment variable
 firebase_key_json = os.environ.get("FIREBASE_KEY_JSON")
@@ -30,6 +29,9 @@ firebase_admin.initialize_app(cred, {
 db = firestore.client()
 bucket = storage.bucket()
 
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))  # Use 8080 by default for local testing
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
 
 app = FastAPI()
 
