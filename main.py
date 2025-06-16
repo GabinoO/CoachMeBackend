@@ -13,6 +13,8 @@ import firebase_admin
 from firebase_admin import credentials, storage, firestore
 from datetime import datetime
 
+app = FastAPI() 
+ 
 # get key content from enviroment variable
 firebase_key_json = os.environ.get("FIREBASE_KEY_JSON")
 
@@ -28,8 +30,6 @@ firebase_admin.initialize_app(cred, {
 })
 db = firestore.client()
 bucket = storage.bucket()
-
-app = FastAPI()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))  # Use 8080 by default for local testing
