@@ -29,11 +29,11 @@ firebase_admin.initialize_app(cred, {
 db = firestore.client()
 bucket = storage.bucket()
 
+app = FastAPI()
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))  # Use 8080 by default for local testing
     uvicorn.run("main:app", host="0.0.0.0", port=port)
-
-app = FastAPI()
 
 # Allow CORS so your app can communicate with this backend
 app.add_middleware(
