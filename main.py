@@ -198,9 +198,6 @@ def process_video(file_path):
         feedback.append("No runner was detected in the video. Please try again with a clearer side-view video")
         return feedback
 
-    logger.info(f"total frames: {total_frames}, accurate frames: {good_frames}, Percentage: {(good_frames / total_frames) * 100 }")
-
-
     # Knee Drive
     avg_knee_height = (np.mean(left_knee_heights) + np.mean(right_knee_heights)) / 2
     avg_hip_height = (lm[mp_pose.PoseLandmark.LEFT_HIP].y + lm[mp_pose.PoseLandmark.RIGHT_HIP].y) / 2
@@ -230,5 +227,8 @@ def process_video(file_path):
 
     if not feedback:
         feedback.append("Your running form looks balanced. Keep it up!")
+
+    # for testing only:
+    feedback.append(f"total frames: {total_frames}, accurate frames: {good_frames}, Percentage: {(good_frames / total_frames) * 100 }")
 
     return feedback
