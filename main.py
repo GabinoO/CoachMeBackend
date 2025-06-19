@@ -13,7 +13,13 @@ import firebase_admin
 from firebase_admin import credentials, storage, firestore
 from datetime import datetime
 
+import logging
+
 app = FastAPI() 
+
+# for debugging    
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
  
 # get key content from enviroment variable
 firebase_key_json = os.environ.get("FIREBASE_KEY_JSON")
@@ -192,6 +198,8 @@ def process_video(file_path):
         feedback.append("No runner was detected in the video. Please try again with a clearer side-view video")
         return feedback
 
+    logger.info(f"total frames: {total_frames}, accurate frames: {good_frames}, Percentage: {(good_frames / total_frames) * 100 }")
+
 
     # Knee Drive
     avg_knee_height = (np.mean(left_knee_heights) + np.mean(right_knee_heights)) / 2
@@ -222,7 +230,5 @@ def process_video(file_path):
 
     if not feedback:
         feedback.append("Your running form looks balanced. Keep it up!")
-
-    print(f"total frames: {total_frames}, accurate frames: {good_frames}, Percentage: {(good_frames / total_frames) * 100 }")
 
     return feedback
