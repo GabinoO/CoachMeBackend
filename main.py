@@ -46,6 +46,7 @@ app.add_middleware(
 
 @app.post("/analyze-video")
 async def analyze_video(file: UploadFile = File(...), user_id: str = Form(...)):
+    
     # Save video to disk
     file_path = f"temp_{file.filename}"
     with open(file_path, "wb") as buffer:
@@ -53,7 +54,6 @@ async def analyze_video(file: UploadFile = File(...), user_id: str = Form(...)):
 
     # Process the video and get feedback
     feedback = process_video(file_path)
-    print(feedback)
 
     try:
       # Upload video to Firebase Storage
@@ -92,6 +92,12 @@ def compute_angle(a, b, c):
     return np.degrees(angle)
 
 def process_video(file_path):
+    
+    # testing purposes
+    total_frames = 0 # the total amount of frames
+    good_frames = 0 # the amount of frames with pose detection
+
+
     frames_with_pose = 0 # counter to know if video does not contain someone running
     frame_inx = 0 # frame counter to only process every couple frames
 
@@ -111,6 +117,8 @@ def process_video(file_path):
         ret, frame = cap.read()
         if not ret:
             break
+        
+        total_frames += 1
         
         frame_inx += 1 # increment and only process every 3 frames
         if frame_inx % 3 != 0:
@@ -143,6 +151,7 @@ def process_video(file_path):
                 continue  # skip low-confidence frame
 
             frames_with_pose += 1
+            good_frames += 1
 
             # Collect data for each frame
             # Normalize by shoulder-to-hip length to reduce scale effects
@@ -213,5 +222,7 @@ def process_video(file_path):
 
     if not feedback:
         feedback.append("Your running form looks balanced. Keep it up!")
+
+    print(f"total frames: {total_frames}, accurate frames: {good_frames}, Percentage: {(good_frames / total_frames) * 100 }")
 
     return feedback
